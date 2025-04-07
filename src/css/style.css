@@ -54,21 +54,21 @@ body {
   margin-bottom: 32px;
 }
 
-.search-form input,
-.search-form button {
+.form input,
+.form-form button {
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 4px;
   border: 1px solid #808080;
 }
 
-.search-form button {
+.form-form button {
   background-color: #ff3d00;
   color: white;
 }
 
-.search-form input:focus,
-.search-form button:focus {
+.form-form input:focus,
+.form-form button:focus {
   outline: none;
   border-color: #ff3d00;
 }
