@@ -47,7 +47,7 @@ body {
   min-width: 1128px;
 }
 
-.search-form {
+.form {
   display: flex;
   justify-content: center;
   gap: 8px;
