@@ -9,33 +9,71 @@ const form = document.querySelector('.form');
 const input = document.querySelector('#search-input');
 const galleryList = document.querySelector('.gallery');
 const loaderEl = document.querySelector('.js-loader');
+const loadMoreBtn = document.querySelector('.load-more-btn');
 
-const lightboxInstance = new SimpleLightbox('.gallery a');
+const lightbox = new SimpleLightbox('.gallery a');
+
+const searchParams = {
+  query: '',
+  page: 1,
+  perPage: 15,
+};
 
 form.addEventListener('submit', async event => {
   event.preventDefault();
 
-  const query = input.value.trim();
-  if (!query) return;
+  const trimmedQuery = input.value.trim().toLowerCase();
+  if (!trimmedQuery) return;
+
+  searchParams.query = trimmedQuery;
+  searchParams.page = 1;
 
   loaderEl.classList.remove('hidden');
+  loadMoreBtn.classList.add('hidden');
+  galleryList.innerHTML = '';
 
   try {
-    const images = await fetchImages(query);
-    galleryList.innerHTML = '';
+    const images = await fetchImages(searchParams);
 
     if (images.length === 0) {
-      showErrorMessage(
-        'Sorry, there are no images matching your search query. Please try again!'
-      );
+      showErrorMessage('No images found. Please try a different query.');
       return;
     }
 
-    renderGallery(images);
-    lightboxInstance.refresh();
+    renderGallery(images); // replaces content
+    lightbox.refresh();
+
+    if (images.length === searchParams.perPage) {
+      loadMoreBtn.classList.remove('hidden');
+    }
   } catch (error) {
-    galleryList.innerHTML = '';
     showErrorMessage('Oops! Something went wrong.');
+    console.error(error);
+  } finally {
+    loaderEl.classList.add('hidden');
+  }
+});
+
+loadMoreBtn.addEventListener('click', async () => {
+  searchParams.page += 1;
+  loaderEl.classList.remove('hidden');
+
+  try {
+    const newImages = await fetchImages(searchParams);
+
+    if (newImages.length === 0) {
+      loadMoreBtn.classList.add('hidden');
+      return;
+    }
+
+    renderGallery(newImages); // appends to existing content
+    lightbox.refresh();
+
+    if (newImages.length < searchParams.perPage) {
+      loadMoreBtn.classList.add('hidden');
+    }
+  } catch (error) {
+    showErrorMessage('Failed to load more images.');
     console.error(error);
   } finally {
     loaderEl.classList.add('hidden');

@@ -1,6 +1,5 @@
 export function renderGallery(images) {
   const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = '';
 
   images.forEach(image => {
     const imageCard = document.createElement('li');

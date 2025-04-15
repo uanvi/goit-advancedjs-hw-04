@@ -11,11 +11,13 @@ const baseSearchParams = {
   safesearch: true,
 };
 
-export async function fetchImages(searchQuery) {
+export async function fetchImages({ page, perPage, query }) {
   try {
     const params = {
       ...baseSearchParams,
-      q: searchQuery,
+      q: query,
+      page,
+      per_page: perPage,
     };
 
     const response = await axios.get(API_URL, { params });
